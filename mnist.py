@@ -91,8 +91,8 @@ def d_loss_d_Z(Y_hat: np.ndarray, Y_onehot: np.ndarray, B: int):
 
 # %%
 # 读取文件
-labels = load_idx_label("./train-labels.idx1-ubyte")
 images = load_idx_images("./train-images.idx3-ubyte")
+labels = load_idx_label("./train-labels.idx1-ubyte")
 
 # 设定训练样本大小
 batch_size = 128
