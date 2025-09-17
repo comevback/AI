@@ -17,7 +17,7 @@ def load_idx_images(path):
 # %%
 
 
-def load_idx_label(path):
+def load_idx_labels(path):
     with open(path, "rb") as f:
         magic, num = struct.unpack(">II", f.read(8))
         assert magic == 2049, f"Magic number mismatch, got {magic}"
@@ -92,7 +92,7 @@ def d_loss_d_Z(Y_hat: np.ndarray, Y_onehot: np.ndarray, B: int):
 # %%
 # 读取文件
 images = load_idx_images("./train-images.idx3-ubyte")
-labels = load_idx_label("./train-labels.idx1-ubyte")
+labels = load_idx_labels("./train-labels.idx1-ubyte")
 
 # 设定训练样本大小
 batch_size = 128
@@ -155,10 +155,10 @@ for epoch in range(epochs):
 X_test_path = "./t10k-images.idx3-ubyte"
 Y_test_path = "./t10k-labels.idx1-ubyte"
 X_test = load_idx_images(X_test_path)
-Y_test = load_idx_label(Y_test_path)
+Y_test = load_idx_labels(Y_test_path)
 
 Z_test = X_test @ W + b
 probs_test = softMax(Z_test)
 loss_test = cross_entropy_from_int(probs_test, Y_test)
 acc_test = (probs_test.argmax(axis=1) == Y_test).mean()
-print(f"test result: loss: {loss_test:4f}, acc: {acc_test:4f}.")
+print(f"\ntest result: loss: {loss_test:4f}, acc: {acc_test:4f}.")
