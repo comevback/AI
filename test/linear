@@ -1,0 +1,44 @@
+1. 向量(Vector) :空间中的箭头，有指向性的尾部位于原点的直线
+2. 向量空间(Vector Space) :一组向量的集合
+3. 线性无关(Linear Independence) :矩阵中
+4. 基与维数(Basis and Dimension)
+5. 矩阵(Matrix)
+6. 矩阵乘法(Matrix Multiplication)
+7. 线性变换(Linear Transformation)
+8. 秩(Rank)
+9. 行列式(Determinant)
+10. 逆矩阵(Inverse Matrix)
+11. 特征值(Eigenvalue)
+12. 特征向量(Eigenvector)
+13. 对角化(Diagonalization)
+14. 正交与标准正交(Orthogonality & Orthonormality)
+15. 投影(Projection)
+16. 内积(Inner Product / Dot Product)
+17. 范数(Norm)
+18. 奇异值分解(Singular Value Decomposition, SVD)
+19. 零空间(Null Space) :对于Av = 0（零向量），所有能成立的v组成的集合就是零空间
+20. 列空间 / 行空间(Column Space / Row Space)
+
+
+
+
+
+
+
+
+
+1. 梯度(Gradient) 
+2. 偏导数(Partial Derivative)
+3. 方向导数(Directional Derivative)
+4. 损失函数(Loss Function)
+5. 学习率(Learning Rate)
+6. 随机梯度下降(SGD)
+7. 动量(Momentum)
+8. 自适应学习率(Adaptive Learning Rate, e.g. Adam, RMSProp)
+9. 学习率调度(Learning Rate Schedule)
+10. 局部最小值(Local Minimum)
+11. 全局最小值(Global Minimum)
+12. 鞍点(Saddle Point)
+13. 平坦区 / 高原区(Plateau)
+14. 正则化(Regularization, e.g. L2, Dropout)
+15. 批归一化(Batch Normalization)
