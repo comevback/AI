@@ -1,8 +1,9 @@
-# %%
+# COMMAND ----------
 import struct
 import numpy as np
+import matplotlib.pyplot as plt
 
-# %%
+# COMMAND ----------
 
 
 def load_idx_images(path):
@@ -14,7 +15,7 @@ def load_idx_images(path):
         images = (data.reshape(num, rows*cols)).astype(np.float32) / 255.0
         return images
 
-# %%
+# COMMAND ----------
 
 
 def load_idx_labels(path):
@@ -24,7 +25,7 @@ def load_idx_labels(path):
         data = np.frombuffer(f.read(), dtype=np.uint8)
         return data
 
-# %%
+# COMMAND ----------
 
 
 def one_hot(labels: np.ndarray):
@@ -35,7 +36,7 @@ def one_hot(labels: np.ndarray):
     targets[index_matrix, labels] = 1
     return targets
 
-# %%
+# COMMAND ----------
 # 前向传播函数，得到Z
 
 
@@ -43,7 +44,7 @@ def forward(X: np.ndarray, W: np.ndarray, b: np.ndarray):
     Z = X.dot(W) + b
     return Z
 
-# %%
+# COMMAND ----------
 # softmax处理，把Z变成概率矩阵
 
 
@@ -53,7 +54,7 @@ def softMax(Z: np.ndarray):
     probs = exp_Z / np.sum(exp_Z, axis=1, keepdims=True)
     return probs
 
-# %%
+# COMMAND ----------
 # 计算损失函数的Y_onehot版本
 
 
@@ -65,7 +66,7 @@ def cross_entropy_from_onehot(Y_hat: np.ndarray, Y_onehot: np.ndarray, eps=1e-12
     # 得到的就是损失函数
     return loss
 
-# %%
+# COMMAND ----------
 # 计算损失函数的y_int版本
 
 
@@ -78,7 +79,7 @@ def cross_entropy_from_int(Y_hat: np.ndarray, y_int: np.ndarray, eps: int = 1e-1
     loss = -np.mean(np.log(p_true + eps))
     return loss
 
-# %%
+# COMMAND ----------
 # 计算损失函数对Zt的导数，作为求得梯度的前提
 
 
@@ -89,7 +90,7 @@ def d_loss_d_Z(Y_hat: np.ndarray, Y_onehot: np.ndarray, B: int):
     return G
 
 
-# %%
+# COMMAND ----------
 # 读取文件
 images = load_idx_images("./train-images.idx3-ubyte")
 labels = load_idx_labels("./train-labels.idx1-ubyte")
@@ -102,24 +103,16 @@ epochs = 20
 N = images.shape[0]
 lr = 0.1
 
-# %%
+# COMMAND ----------
 # 创建参数矩阵
 rows, cols = 784, 10
 W = (np.random.randn(rows, cols) * 0.01).astype(np.float32)
 b = np.zeros((1, 10), dtype=np.float32)
 
-# %%
-# #求的概率矩阵
-# Y_hat= softMax(Z)
-# assert np.allclose(Y_hat.sum(axis=1), 1.0, atol=1e-6)
-# G = d_loss_d_Z(Y_hat, Y_onehot, B)
-# # 最重要的，得到对于W和对于b的偏导数，从而得到梯度
-# grad_W = Xb.T.dot(G)
-# grad_b = G.sum(axis=0, keepdims=True)
-# W -= lr * grad_W
-# b -= lr * grad_b
+losses = []
+accuracies = []
 
-# %%
+# COMMAND ----------
 for epoch in range(epochs):
     indices = np.random.permutation(N)
     X_shuffled = images[indices]
@@ -149,9 +142,25 @@ for epoch in range(epochs):
     probs_all = softMax(Z_all)
     loss = cross_entropy_from_int(probs_all, labels)
     acc = (probs_all.argmax(axis=1) == labels).mean()
+    losses.append(loss)
+    accuracies.append(acc)
     print(f"round {epoch + 1}: loss={loss:.4f}, acc={acc:.4f}")
 
-# %%
+# COMMAND ----------
+plt.figure(figsize=(12, 6))
+plt.plot(range(1, epochs + 1), losses, label='Loss', marker='o')
+plt.plot(range(1, epochs + 1), accuracies, label='Accuracy', marker='s')
+plt.xlabel('Epochs')
+plt.ylabel('Value')
+plt.title('Training Loss and Accuracy')
+plt.legend()
+
+for i, (l, a) in enumerate(zip(losses, accuracies)):
+    plt.text(i + 1, l, f"{l:.3f}", ha='left', va='bottom', fontsize=8)
+    plt.text(i + 1, a, f"{a:.3f}", ha='center', va='bottom', fontsize=8)
+plt.show()
+
+# COMMAND ----------
 X_test_path = "./t10k-images.idx3-ubyte"
 Y_test_path = "./t10k-labels.idx1-ubyte"
 X_test = load_idx_images(X_test_path)
@@ -162,3 +171,5 @@ probs_test = softMax(Z_test)
 loss_test = cross_entropy_from_int(probs_test, Y_test)
 acc_test = (probs_test.argmax(axis=1) == Y_test).mean()
 print(f"\ntest result: loss: {loss_test:4f}, acc: {acc_test:4f}.")
+np.save("W.npy", W)
+np.save("b.npy", b)
